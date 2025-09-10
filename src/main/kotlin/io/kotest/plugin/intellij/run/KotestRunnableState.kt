@@ -38,15 +38,16 @@ class KotestRunnableState(
 
       // spec can be omitted if you want to run all tests in a module
       val specName = configuration.getSpecName()
+      val testPath = configuration.getTestPath()
+
       if (!specName.isNullOrBlank()) {
-         params.programParametersList.add("--spec", specName)
+         if (!testPath.isNullOrBlank()) {
+            params.programParametersList.add("--descriptor", "$specName/$testPath")
+         } else {
+            params.programParametersList.add("--spec", specName)
+         }
          params.programParametersList.add("--private", "true")
       }
-
-      // test can be omitted if you want to run the entire spec or package
-      val testPath = configuration.getTestPath()
-      if (!testPath.isNullOrBlank())
-         params.programParametersList.add("--testpath", testPath)
 
       launcherConfig.params.forEach {
          params.programParametersList.add(it)
